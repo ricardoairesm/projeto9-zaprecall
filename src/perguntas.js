@@ -2,47 +2,90 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import play from "./assets/img/seta_play.png";
 import virar from "./assets/img/seta_virar.png";
+import erro from "./assets/img/icone_erro.png";
+import quase from "./assets/img/icone_quase.png";
+import certo from "./assets/img/icone_certo.png";
 
 export default function Perguntas(props) {
-    const cards = [
-        { question: "O que é JSX?", answer: "Uma extensão da linguagem JavaScript" },
-        { question: "O React é __", answer: "Uma biblioteca JavaScript para construção de interfaces" },
-        { question: "Componentes devem iniciar com __", answer: "Letra maiúscula" },
-        { question: "Podemos colocar __ dentro do JSX", answer: "expressões" },
-        { question: "O ReactDOM nos ajuda __", answer: "Interagindo com a DOM para colocar componentes React na mesma" },
-        { question: "Usamos o npm para __", answer: "Gerenciar os pacotes necessários e suas dependências" },
-        { question: "Usamos props para __", answer: "Passar diferentes informações para componentes" },
-        { question: "Usamos estado (state) para __", answer: "Dizer para o React quais informações quando atualizadas devem renderizar a tela novamente" }
-    ];
-    const { playGame, clickada, esconderBranco, mostrarPergunta, mostrarResposta, botao } = props
-
-
+    const { id, question, answer } = props.cards
+    const { primeiroClick, ativarPergunta, segundoClick, ativarResposta ,naoLembrei,erradas,medias,quaseLembrei, zap, certas} = props
+    const layout = []
+    if (certas.includes(id)) {
+        return (
+            <>
+            <CaixaBranca color="#2FBE34" decoration = "line-through">
+                <h1>Pergunta {id}</h1>
+                <Play>
+                    <img src={certo} />
+                </Play>
+            </CaixaBranca>
+        </>
+        )
+        
+    }
+    if (medias.includes(id)) {
+        return (
+            <>
+            <CaixaBranca color="#FF922E" decoration = "line-through">
+                <h1>Pergunta {id}</h1>
+                <Play>
+                    <img src={quase} />
+                </Play>
+            </CaixaBranca>
+        </>
+        )
+        
+    }
+    if (erradas.includes(id)) {
+        return (
+            <>
+            <CaixaBranca color="red" decoration = "line-through">
+                <h1>Pergunta {id}</h1>
+                <Play>
+                    <img src={erro} />
+                </Play>
+            </CaixaBranca>
+        </>
+        )
+        
+    }
+    if (segundoClick.includes(id)) {
+        return (
+            <CaixaPergunta>
+                <h1>{answer}</h1>
+                <BotaoVermelho onClick={()=>naoLembrei(id)}><p>Não lembrei</p></BotaoVermelho>
+                <BotaoAmarelo onClick={()=>quaseLembrei(id)}>Quase não lembrei</BotaoAmarelo>
+                <BotaoVerde onClick={()=>zap(id)}>Zap!</BotaoVerde>
+            </CaixaPergunta>
+        )
+        
+    }
+    if (primeiroClick.includes(id)) {
+        return (
+            <CaixaPergunta>
+                <h1>{question}</h1>
+                <Virar onClick={()=> ativarResposta(id)}>
+                    <img src={virar} />
+                </Virar>
+            </CaixaPergunta>
+        )
+    }
 
     return (
         <>
-            {cards.map((pergunta, index) =>
-
-                <ContainerPerguntas key={pergunta.question} disabled={clickada.includes(pergunta.question)} estado={esconderBranco} estado2={mostrarPergunta} estado3={mostrarResposta}>
-                    <h1 >Pergunta {index + 1}</h1>
-                    <h2 >{pergunta.question}</h2>
-                    <h3 >{pergunta.answer}</h3>
-                    <Play disabled = {clickada.includes(pergunta.question)} onClick={() => playGame(pergunta.question)}>
-                        <img src={play} />
-                    </Play>
-                    <Virar>
-                        <img src = {virar}/>
-                    </Virar>
-
-                </ContainerPerguntas>
-            )}
+            <CaixaBranca color="black" decoration = "none">
+                <h1>Pergunta {id}</h1>
+                <Play onClick={() => ativarPergunta(id)}>
+                    <img src={play} />
+                </Play>
+            </CaixaBranca>
         </>
     )
 }
 
-const ContainerPerguntas = styled.button`
-all:unset;
-display:${props => props.display};
+const CaixaBranca = styled.div`
 position:relative;
+
 box-sizing:border-box;
 width: 300px;
 height: 65px;
@@ -54,65 +97,37 @@ font-style: normal;
 font-weight: 700;
 font-size: 16px;
 line-height: 19px;
+margin-bottom: 25px;
+color:${props => props.color};
+
+h1{
+    text-decoration-line: ${props=>props.decoration};
+    position:absolute;
+    top:23px;
+    left:15px;
+}
+`
+const CaixaPergunta = styled.div`
+position:relative;
+box-sizing:border-box;
+width: 300px;
+height: 150px;
+background: #FFFFD5;
+box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.15);
+border-radius: 5px;
+font-family: 'Recursive';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 19px;
 color: #333333;
 margin-bottom: 25px;
-
-&:disabled{
-    height:131px;
-    background: #FFFFD5;
-    font-weight: 400;
-    font-size: 18px;
-    h1{
-    position:absolute;
-    top:23px;
-    left:15px;
-    display:${props => props.estado};
-}
-
-h2{
-    position:absolute;
-    top:23px;
-    left:15px;
-    display: ${props => props.estado2};
-}
-
-h3{
-    position:absolute;
-    top:23px;
-    left:15px;
-    display:${props => props.estado3};
-}
-
-.Play{
-    display:none;
-}
-
-.Virar{
-    display:flex;
-}
-    
-}
-
-h2{
-    display: none;
-}
-
-h3{
-    display: none
-}
 
 h1{
     position:absolute;
     top:23px;
     left:15px;
-
 }
-
-
-
-
-
-
 `
 
 const Play = styled.button`
@@ -121,23 +136,13 @@ position: absolute;
 left:265px;
 top:20px;
 img{
-    width:20px;
+    width:23px;
     height:23px;
-}
-&:disabled{
-    position:absolute;
-    top:105px;
-    left:254px;
-    img{
-        width:30px;
-        height:20px;
-    }
 }
 
 `
 
 const Virar = styled.div`
-display:none;
 position:absolute;
 top:105px;
 left:254px;
@@ -145,4 +150,69 @@ img{
     width:30px;
     height:20px;
 }
+`
+
+const BotaoVermelho = styled.button`
+all:unset;
+position: absolute;
+width: 85px;
+height: 37px;
+bottom:10px;
+left:17px;
+background: #FF3030;
+border-radius: 5px;
+font-family: 'Recursive';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 14px;
+display: flex;
+align-items: center;
+justify-content:center;
+color: #FFFFFF;
+p{
+    width:65px;
+    text-align:center;
+}
+
+`
+const BotaoAmarelo = styled.button`
+all:unset;
+position: absolute;
+width: 85px;
+height: 37px;
+bottom:10px;
+left:110px;
+background: #FF922E;;
+border-radius: 5px;
+font-family: 'Recursive';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 14px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #FFFFFF;
+`
+const BotaoVerde = styled.button`
+all:unset;
+position: absolute;
+width: 85px;
+height: 37px;
+bottom:10px;
+left:203px;
+background: #2FBE34;
+border-radius: 5px;
+font-family: 'Recursive';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 14px;
+display: flex;
+align-items: center;
+justify-content:center;
+
+color: #FFFFFF;
 `
