@@ -8,15 +8,21 @@ import certo from "./assets/img/icone_certo.png";
 
 export default function Perguntas(props) {
     const { id, question, answer } = props.cards
-    const { primeiroClick, ativarPergunta, segundoClick, ativarResposta ,naoLembrei,erradas,medias,quaseLembrei, zap, certas} = props
+    const { primeiroClick, ativarPergunta, segundoClick, ativarResposta ,naoLembrei,erradas,medias,quaseLembrei, zap, certas, resultado, mudarResultado} = props
     const layout = []
+
+    function alterarResultado(icone){
+        const novoResultado = [...resultado, icone];
+        mudarResultado(novoResultado);
+    }
+
     if (certas.includes(id)) {
         return (
             <>
-            <CaixaBranca color="#2FBE34" decoration = "line-through">
-                <h1>Pergunta {id}</h1>
+            <CaixaBranca data-test = "flashcard" color="#2FBE34" decoration = "line-through">
+                <h1 data-test = "flashcard-text">Pergunta {id}</h1>
                 <Play>
-                    <img src={certo} />
+                    <img data-test="zap-icon" src={certo} />
                 </Play>
             </CaixaBranca>
         </>
@@ -26,10 +32,10 @@ export default function Perguntas(props) {
     if (medias.includes(id)) {
         return (
             <>
-            <CaixaBranca color="#FF922E" decoration = "line-through">
-                <h1>Pergunta {id}</h1>
+            <CaixaBranca data-test = "flashcard" color="#FF922E" decoration = "line-through">
+                <h1 data-test = "flashcard-text">Pergunta {id}</h1>
                 <Play>
-                    <img src={quase} />
+                    <img data-test="partial-icon" src={quase} />
                 </Play>
             </CaixaBranca>
         </>
@@ -39,10 +45,10 @@ export default function Perguntas(props) {
     if (erradas.includes(id)) {
         return (
             <>
-            <CaixaBranca color="red" decoration = "line-through">
-                <h1>Pergunta {id}</h1>
+            <CaixaBranca data-test = "flashcard" color="red" decoration = "line-through">
+                <h1 data-test = "flashcard-text" >Pergunta {id}</h1>
                 <Play>
-                    <img src={erro} />
+                    <img data-test="no-icon" src={erro} />
                 </Play>
             </CaixaBranca>
         </>
@@ -51,20 +57,20 @@ export default function Perguntas(props) {
     }
     if (segundoClick.includes(id)) {
         return (
-            <CaixaPergunta>
-                <h1>{answer}</h1>
-                <BotaoVermelho onClick={()=>naoLembrei(id)}><p>Não lembrei</p></BotaoVermelho>
-                <BotaoAmarelo onClick={()=>quaseLembrei(id)}>Quase não lembrei</BotaoAmarelo>
-                <BotaoVerde onClick={()=>zap(id)}>Zap!</BotaoVerde>
+            <CaixaPergunta data-test = "flashcard" >
+                <h1 data-test = "flashcard-text">{answer}</h1>
+                <BotaoVermelho data-test="no-btn" onClick={()=> naoLembrei(id) & alterarResultado(erro)}><p>Não lembrei</p></BotaoVermelho>
+                <BotaoAmarelo data-test="partial-btn" onClick={()=>quaseLembrei(id) & alterarResultado(quase)}>Quase não lembrei</BotaoAmarelo>
+                <BotaoVerde data-test="zap-btn" onClick={()=>zap(id) & alterarResultado(certo)}>Zap!</BotaoVerde>
             </CaixaPergunta>
         )
         
     }
     if (primeiroClick.includes(id)) {
         return (
-            <CaixaPergunta>
-                <h1>{question}</h1>
-                <Virar onClick={()=> ativarResposta(id)}>
+            <CaixaPergunta data-test = "flashcard" >
+                <h1 data-test = "flashcard-text">{question}</h1>
+                <Virar data-test="turn-btn" onClick={()=> ativarResposta(id)}>
                     <img src={virar} />
                 </Virar>
             </CaixaPergunta>
@@ -73,9 +79,9 @@ export default function Perguntas(props) {
 
     return (
         <>
-            <CaixaBranca color="black" decoration = "none">
-                <h1>Pergunta {id}</h1>
-                <Play onClick={() => ativarPergunta(id)}>
+            <CaixaBranca data-test = "flashcard" color="black" decoration = "none">
+                <h1 data-test = "flashcard-text">Pergunta {id}</h1>
+                <Play data-test="play-btn" onClick={() => ativarPergunta(id)}>
                     <img src={play} />
                 </Play>
             </CaixaBranca>

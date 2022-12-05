@@ -4,18 +4,18 @@ import logo from './assets/img/logo.png';
 
 export default function TelaInicial(props) {
     const [disabled, setDisabled] = useState("flex");
-    const { mudarDisable } = props;
+    const {mudarDesabilitar} = props;
     return (
         <>
             <Logo disabled={disabled}>
                 <img src={logo} />
             </Logo>
-            <Botao onClick={trocarTela} disabled={disabled}>Iniciar Recall!</Botao>
+            <Botao data-test="start-btn" onClick={trocarTela} disabled={disabled}>Iniciar Recall!</Botao>
         </>
     )
     function trocarTela() {
         setDisabled("none");
-        mudarDisable("flex");
+        mudarDesabilitar(false);
     }
 }
 

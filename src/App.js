@@ -5,16 +5,22 @@ import TelaPerguntas from './telaPerguntas';
 import cards from './cards';
 
 export default function App(props) {
-    
-    
-   
+    const [desablitar, setDesabilitar] = useState(true)
+    if (desablitar) {
+        return (
+            <Corpo>
+                <TelaInicial mudarDesabilitar={setDesabilitar}></TelaInicial>
+            </Corpo>
+        )
+    }
+
     return (
         <Corpo>
-            <TelaPerguntas cards = {cards}></TelaPerguntas>
+            <TelaPerguntas cards={cards}></TelaPerguntas>
         </Corpo>
     )
 
-   
+
 }
 
 

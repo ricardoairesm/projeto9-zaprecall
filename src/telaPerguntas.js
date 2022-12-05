@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import logo from './assets/img/logo.png';
-import play from "./assets/img/seta_play.png";
 import virar from "./assets/img/seta_virar.png";
 import Perguntas from './perguntas';
 import ContadorAcertos from './contadordeAcertos';
@@ -14,18 +13,17 @@ export default function TelaPerguntas(props) {
     const [medias, setMedias] = useState([])
     const [certas, setCertas] = useState([])
     const [contador, setContador] = useState(0)
+    const [resultado, setResultados] = useState([])
 
 
     function trocarParaPergunta(id) {
         const novoClick = [...primeiroClick, id]
         setPrimeiroClick(novoClick)
-        console.log(novoClick)
     }
 
     function trocarParaResposta(id) {
         const novoSegundoClick = [...segundoClick, id]
         setSegundoClick(novoSegundoClick)
-        console.log(novoSegundoClick)
     }
     function resetarResposta(id) {
         const novoClick = [];
@@ -41,14 +39,11 @@ export default function TelaPerguntas(props) {
                 novoSegundoClick.push(segundoClick[i]);
             }
         }
-        console.log(novoClick);
-        console.log(novoSegundoClick);
         setPrimeiroClick(novoClick);
         setSegundoClick(novoSegundoClick);
 
     }
     function naoLembrei(id) {
-        console.log(id);
         const novoContador = contador + 1;
         const novaErrada = [...erradas, id]
         resetarResposta(id);
@@ -57,7 +52,6 @@ export default function TelaPerguntas(props) {
     }
 
     function quaseLembrei(id) {
-        console.log(id);
         const novoContador = contador + 1;
         const novaMedia = [...medias, id]
         resetarResposta(id);
@@ -66,13 +60,14 @@ export default function TelaPerguntas(props) {
     }
 
     function zap(id) {
-        console.log(id);
         const novoContador = contador + 1;
         const novaCerta = [...certas, id];
         resetarResposta(id);
         setCertas(novaCerta);
         setContador(novoContador);
     }
+
+    
 
 
     return (
@@ -84,9 +79,9 @@ export default function TelaPerguntas(props) {
                 </Logo>
 
                 <ListaPerguntas>
-                    {cards.map((cards) => <Perguntas key={cards.id} cards={cards} primeiroClick={primeiroClick} ativarPergunta={trocarParaPergunta} segundoClick={segundoClick} ativarResposta={trocarParaResposta} naoLembrei={naoLembrei} erradas={erradas} medias={medias} quaseLembrei={quaseLembrei} zap = {zap} certas = {certas}></Perguntas>)}
+                    {cards.map((cards) => <Perguntas key={cards.id} cards={cards} primeiroClick={primeiroClick} ativarPergunta={trocarParaPergunta} segundoClick={segundoClick} ativarResposta={trocarParaResposta} naoLembrei={naoLembrei} erradas={erradas} medias={medias} quaseLembrei={quaseLembrei} zap = {zap} certas = {certas} resultado = {resultado} mudarResultado={setResultados}></Perguntas>)}
                 </ListaPerguntas>
-                <ContadorAcertos contador = {contador} cards = {cards}/>
+                <ContadorAcertos contador = {contador} cards = {cards} resultado = {resultado}/>
 
             </Tela>
         </>
